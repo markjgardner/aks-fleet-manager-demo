@@ -1,0 +1,38 @@
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: myapp-rollout
+spec:
+  placementName: myapp-placement
+  resourceSnapshotIndex: "0"
+  stagedUpdateStrategyName: myapp-strategy
+---
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ClusterStagedUpdateStrategy
+metadata:
+  name: myapp-strategy
+spec:
+  stages:
+  - name: dev
+    labelSelector:
+      matchLabels:
+        environment: dev
+    afterStageTasks:
+    - type: TimedWait
+      waitTime: 1h
+  - name: test
+    labelSelector:
+      matchLabels:
+        environment: test
+    afterStageTasks:
+    - type: TimedWait
+      waitTime: 24h
+    - type: Approval
+      approval:
+        approvers:
+        - type: ServiceAccount
+          name: fleet-admin
+  - name: prod
+    labelSelector:
+      matchLabels:
+        environment: prod
