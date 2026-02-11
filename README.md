@@ -109,11 +109,18 @@ kubectl get pods -n myapp
 
 ## Approving the Rollout
 
-After the test stage completes its 24-hour wait, you'll need to approve the deployment to prod:
+After the test stage completes its 24-hour wait, the rollout will pause waiting for approval before proceeding to prod. The approval process depends on your Fleet Manager configuration.
+
+**Note**: The exact approval mechanism may vary based on your Fleet Manager version. Check the status of your ClusterStagedUpdateRun for specific approval instructions:
 
 ```bash
-kubectl patch clusterstagedupdaterun myapp-rollout --type=merge -p '{"spec":{"stages":[{"name":"test","approvalStatus":"approved"}]}}'
+kubectl get clusterstagedupdaterun myapp-rollout -o yaml
 ```
+
+Common approval methods include:
+- Using the Fleet Manager UI to approve the stage
+- API-based approval through Fleet Manager endpoints
+- Custom approval webhooks configured in your fleet
 
 ## Cleanup
 
@@ -152,3 +159,4 @@ Member Clusters (dev, test, prod)
 - ClusterResourcePlacement with `PickAll` policy ensures all clusters receive the resources
 - The rollout strategy provides a real-world example of progressive deployment with gates
 - Approval gates require manual intervention to proceed to production
+- **API Version Note**: The ClusterStagedUpdateStrategy uses the v1alpha1 API, indicating this feature is in alpha and may change in future Fleet Manager releases
