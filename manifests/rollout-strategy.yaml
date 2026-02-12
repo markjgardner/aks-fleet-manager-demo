@@ -31,9 +31,7 @@ spec:
     afterStageTasks:
     - type: TimedWait
       waitTime: 24h
-    # Approval gate before proceeding to prod
-    approvals:
-      after: true
+    - type: Approval
   - name: prod
     labelSelector:
       matchLabels:
