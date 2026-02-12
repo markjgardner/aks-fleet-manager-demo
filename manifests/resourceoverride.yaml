@@ -21,6 +21,7 @@ spec:
           - op: replace
             path: /spec/replicas
             value: 1
+          # Add environment variable (assumes no existing env array in base deployment)
           - op: add
             path: /spec/template/spec/containers/0/env
             value:
@@ -36,6 +37,7 @@ spec:
           - op: replace
             path: /spec/replicas
             value: 2
+          # Add environment variable (assumes no existing env array in base deployment)
           - op: add
             path: /spec/template/spec/containers/0/env
             value:
@@ -51,6 +53,7 @@ spec:
           - op: replace
             path: /spec/replicas
             value: 3
+          # Add environment variable (assumes no existing env array in base deployment)
           - op: add
             path: /spec/template/spec/containers/0/env
             value:
