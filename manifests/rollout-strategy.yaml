@@ -31,11 +31,9 @@ spec:
     afterStageTasks:
     - type: TimedWait
       waitTime: 24h
-    - type: Approval
-      approval:
-        approvers:
-        - type: ServiceAccount
-          name: fleet-admin
+    # Approval gate before proceeding to prod
+    approvals:
+      after: true
   - name: prod
     labelSelector:
       matchLabels:
