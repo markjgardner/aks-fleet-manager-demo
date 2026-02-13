@@ -1,17 +1,4 @@
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateRun
-metadata:
-  name: myapp-rollout
-spec:
-  placementName: myapp-placement
-  # resourceSnapshotIndex identifies which version of resources to deploy
-  # Use "0" for initial deployment, increment for updates
-  resourceSnapshotIndex: "0"
-  stagedUpdateStrategyName: myapp-strategy
----
-# Note: ClusterStagedUpdateStrategy uses v1alpha1 API as this feature is still in alpha
-# and may be subject to breaking changes in future releases
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateStrategy
 metadata:
   name: myapp-strategy
