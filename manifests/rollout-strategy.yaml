@@ -1,0 +1,25 @@
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateStrategy
+metadata:
+  name: myapp-strategy
+spec:
+  stages:
+  - name: dev
+    labelSelector:
+      matchLabels:
+        environment: dev
+    afterStageTasks:
+    - type: TimedWait
+      waitTime: 1h
+  - name: test
+    labelSelector:
+      matchLabels:
+        environment: test
+    afterStageTasks:
+    - type: TimedWait
+      waitTime: 24h
+    - type: Approval
+  - name: prod
+    labelSelector:
+      matchLabels:
+        environment: prod

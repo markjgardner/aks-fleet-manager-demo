@@ -1,0 +1,61 @@
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourceOverride
+metadata:
+  name: myapp-env-config
+  namespace: myapp
+spec:
+  resourceSelectors:
+    - group: apps
+      kind: Deployment
+      version: v1
+      name: myapp
+  policy:
+    overrideRules:
+      # Override for dev environment - use fewer replicas
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  environment: dev
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/replicas
+            value: 1
+          # Add environment variable (assumes no existing env array in base deployment)
+          - op: add
+            path: /spec/template/spec/containers/0/env
+            value:
+              - name: ENVIRONMENT
+                value: development
+      # Override for test environment - use more replicas
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  environment: test
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/replicas
+            value: 2
+          # Add environment variable (assumes no existing env array in base deployment)
+          - op: add
+            path: /spec/template/spec/containers/0/env
+            value:
+              - name: ENVIRONMENT
+                value: testing
+      # Override for prod environment - use most replicas
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  environment: prod
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/replicas
+            value: 3
+          # Add environment variable (assumes no existing env array in base deployment)
+          - op: add
+            path: /spec/template/spec/containers/0/env
+            value:
+              - name: ENVIRONMENT
+                value: production
